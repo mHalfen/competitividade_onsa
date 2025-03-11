@@ -1,5 +1,5 @@
 dist/
 build/
-*.exe
-*.pkg
-*.env
+.exe
+.pkg
+.env

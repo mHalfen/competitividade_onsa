@@ -1,2 +1,5 @@
 dist/
 build/
+*.exe
+*.pkg
+*.env

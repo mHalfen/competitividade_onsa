@@ -30,6 +30,7 @@ def query_shopping(start_date, end_date):
     WHERE for_shopping.datacoleta BETWEEN '{start_date}' AND '{end_date}';
     """
 
+
 def query_sales(start_date, end_date): 
     return f"""
     SELECT sig_captura.SiglaLoja AS Loja_capt,
@@ -41,11 +42,10 @@ def query_sales(start_date, end_date):
     FROM cad_mercador INNER JOIN sig_captura ON cad_mercador.CODIGOINT = sig_captura.CODIGOINT
 	INNER JOIN cad_mercloja ON cad_mercador.CODIGOINT = cad_mercloja.CODIGOINT
     WHERE DtMovimento BETWEEN '{start_date}' AND '{end_date}'
-    AND (cad_mercador.ltMix = 'A' OR cad_mercador.ltMix = 'S')
+    AND cad_mercador.ltMix = "A"
     AND SiglaLoja IN ("001", "007", "008", "010", "014", "015", "017")
     AND cad_mercloja.LOJA IN ("001", "007", "008", "010", "014", "015", "017");
     """
-
 
 
 def query_regular_sale(): 
@@ -75,14 +75,16 @@ def query_regular_sale():
             cad_mercador017.CODIGOINT = cad_mercador.CODIGOINT
     """
 
-#def query_sales_2024(): 
-#    return f"""
-#    SELECT 
-#        CODIGOINT AS Codigo,
-#        SUM(Quantidade) AS sum_qtde, 
-#        SUM(Venda) AS sum_sale_value
-#    FROM sig_captura AS cap
-#    WHERE DtMovimento >= "2024-01-01" AND DtMovimento <= "2024-12-31"
-#        AND SiglaLoja IN ("002", "003", "004", "005", "006", "007", "008", "009", "010", "012", "014", "015", "016")
-#    GROUP BY CODIGOINT
-#    """
+
+def query_skus_scan():
+    return '''
+    SELECT 
+		cad_mercador.CODIGOEAN as sku,
+        cad_secaooper.Departamento AS Depto,  
+        for_forneced.RAZAOSOCIA AS Fornecedor
+    FROM cad_mercador
+    INNER JOIN cad_secaooper 
+        ON cad_secaooper.SecaoOper = cad_mercador.SECAOOPE
+    INNER JOIN for_forneced 
+        ON for_forneced.Codigo = cad_mercador.codfornprincipal
+    '''
